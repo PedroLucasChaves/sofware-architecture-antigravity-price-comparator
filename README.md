@@ -1,44 +1,29 @@
-# 🎮 PlayStation Price Comparator API
+# 🚀 Antigravity Price Comparator
 
-**Antigravity Price Tracker** é um sistema projetado com **Arquitetura Hexagonal (Ports & Adapters)** sob os princípios do **CQRS**. Ele capta, normaliza e orquestra histórico de preços para Consoles e Hardware Gamers listados no *amazon_classified.json*, rastreando ativamente a inflação de ofertas.
+Um comparador de preços de produtos com painel web interativo. Ele processa um JSON base de produtos da Amazon, classifica as categorias e exibe históricos e variações de preços na interface visual.
 
----
+## 🛠 Como Rodar o Projeto
 
-## 🛠 Topologia de Diretórios (Plugin Architecture)
+Você precisa apenas do **Python 3** instalado (nenhum `pip install` é necessário, tudo roda nativamente).
 
-Esta engine possui um desacoplamento estrito entre "Negócios" e "Infraestrutura":
+Siga os passos abaixo na pasta raiz:
 
-* `core/`: Motor central impermeável. Possui os *Use Cases* e Serviços e dita as regras da operação de preços sem entender de Banco de Dados.
-* `plugins/`: Engrenagens conectáveis físicas (Arquitetura de Plugins).
-    * `scrapper_amazon/`: Módulo de ponte para captura do JSON/Crawler.
-    * `storage_sqlite/`: Módulo do BD purista com tabela Histórica isolada temporalmente.
-* `presentation/`: FrontEnd de linha de comando para consumir Visualmente o histórico CQRS.
-
----
-
-## 🚀 Como Executar Localmente
-
-Você precisará apenas de **Python 3** configurado em sua máquina. O sistema não necessita de nenhuma biblioteca externa ou configurações pesadas virtuais (`pip install`). 
-
-Na raiz do repositório, estão disponíveis 2 comandos absolutos para você simular as rotinas diárias do Robô:
-
-### Passo 1: Executar o Scraper de Atualização Diária (A Central)
-
-Para buscar os lotes base atualizados, parsear os dados contra a lógica forte de Domain Services e depositar o instantâneo (*snapshot*) atual dessas mercadorias no banco de dados SQLite, rodamos a Interface Primária:
-
+### 1. Classificar e Salvar Produtos no Banco
+Primeiro, classifique os dados do JSON bruto e salve o registro atual no banco SQLite.
 ```bash
-python3 main.py
+python classify_products.py
+python main.py
 ```
-> 💡 *Dica:* Rode este comando ao menos 1x ao dia. Quando for disparado, o sistema mapeará tudo garantindo que **não sobrepõe** a captura de ontem, montando automaticamente a sua Tabela Temporal (Histórico).
+*(Dica: Rode esses scripts diariamente caso o arquivo `.json` receba novas ofertas para criar o histórico).*
 
----
-
-### Passo 2: Executar o Terminal de Analytics
-
-Para visualizar o painel do consumidor e avaliar se é uma boa hora para comprar as mercadorias com o preço em queda, utilizamos o Módulo Gráfico (*CQRS / Presentation Layer*):
-
+### 2. Abrir o Dashboard Web
+Para visualizar o comparador:
 ```bash
-python3 presentation/cli_dashboard.py
+python presentation/web_dashboard/app.py
 ```
-> 💡 *Dica:* A tela do ambiente preencherá gráficos **`Sparkline` ASCII**, Tendências (Alta/Queda), indicando visualmente qual foi os limites máximos/mínimos para peças exatas de consles, baseando-se por tudo aquilo que foi rodado internamente pelo Motor `main.py`!
-# sofware-architecture-antigravity-price-comparator
+*(Caso encontre erros ao imprimir na tela do console no Windows, você pode rodar usando o comando `$env:PYTHONIOENCODING="utf-8"; python presentation/web_dashboard/app.py` no PowerShell).*
+
+### 3. Acessar
+Abra seu navegador e entre em:
+👉 **http://localhost:8080**
+# sofwareArchitectureAntigravityPriceComparator
